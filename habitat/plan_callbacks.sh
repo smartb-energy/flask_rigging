@@ -7,14 +7,13 @@ pkg_deps=(
   "core/curl/7.63.0"
   "core/python36"
 )
-pkg_svc_run="python -m flask run"
 
 
 do_begin() {
   for module in $(cat $PLAN_CONTEXT/../flask/requirements.txt | sed 's@==@/@')
   do
     module_basename=$(echo $pkg_origin/$module | cut -d/ -f1,2)
-    if hab pkg search $module_basename | grep $module_basename/  &> "/dev/null"
+    if hab pkg search $module_basename | grep $module_basename/ &> "/dev/null"
     then
       build_line "Adding vendored version of $pkg_origin/$module to package dependencies"
       pkg_deps+=($(echo smartb/$module))
@@ -56,7 +55,6 @@ do_setup_environment() {
   python_package="$(_get_pkg_deps | grep /python)"
   python_major_version="$(hab pkg path $python_package | cut -d'/' -f6 | cut -d'.' -f1,2)"
 
-  push_runtime_env   "PYTHONPATH"    "$(pkg_path_for $python_package)/lib/python${python_major_version}/site-packages"
   push_runtime_env   "PYTHONPATH"    "${pkg_prefix}/lib/python${python_major_version}/site-packages"
   set_runtime_env -f "FLASK_APP"     "$pkg_prefix/flask/app.py"
   set_runtime_env -f "LANG"          "$pkg_lang"
@@ -83,9 +81,11 @@ do_build() {
 
 do_install() {
   build_line "Installing Flask app to $pkg_prefix..."
-  cp --verbose --preserve --recursive "$PLAN_CONTEXT/../flask" "$pkg_prefix/flask"
-  mkdir --parents "$pkg_prefix/hooks/"
-  cp --verbose --preserve --recursive $(hab pkg path "smartb/flask_rigging")/hooks/* "$pkg_prefix/hooks/"
+  cp --verbose --preserve --recursive \
+    "$PLAN_CONTEXT/../flask" "$pkg_prefix/flask"
+  mkdir --parents "$pkg_prefix/hooks/"  # TODO: find a cleaner way to inherit templates
+  cp --interactive --verbose --preserve --recursive \
+    $(hab pkg path "smartb/flask_rigging")/hooks/* "$pkg_prefix/hooks/"
   return $?
 }
 
