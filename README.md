@@ -11,30 +11,39 @@ Package. For more about Flask, see http://flask.pocoo.org.
 Rigging (Plan templating) package
 
 ## Usage
-Here's how a plan depending on `smartb/flask_rigging` might look:
+Here's how a plan depending on `smartb/scaffolding-flask` might look:
 ```
-pkg_origin=origin
-pkg_name=name
-pkg_version="0.1.0"
-pkg_channel="staging"   # If set, specifies the Builder Channel to promote to
-pkg_lang="en_US.UTF-8"  # Specify the LANG value you wish to set
+# You must set the following 4 package variables to generate metadata for your
+# package:
+pkg_origin=<origin>
+pkg_name=<name>
+pkg_version="<version>"
 pkg_maintainer="smartB Engineering <dev@smartb.eu>"
-pkg_deps=(
-  "smartb/flask_rigging"
+
+# Setting 'pkg_scaffolding' is required to inherit Flask-specific build logic.
+pkg_scaffolding="smartb/scaffolding-flask"
+
+# Setting 'scaffolding_python_pkg' is required if you need a specific version of
+# Python. See https://bldr.habitat.sh/#/pkgs/core/python
+scaffolding_python_pkg="core/python36"
+
+# Populate this array with the names of any Pip modules you want to try to fetch
+# from your Builder origin as 'vendored' modules:
+scaffolding_vendored_python_modules=(
+  "Cython"
+  "numpy"
 )
-source $(hab pkg path "smartb/flask_rigging")/*.sh
 ```
-This assumes the following Flask directory structure at the root of this repo:
+
+The `smartb/scaffolding-flask` package assumes the following directory structure
+for your Flask project, where `app.py` is the expected entrypoint for Flask:
 ```
 .
-|-- flask
-|   |-- requirements.txt
-|   |-- app.py
-|   |-- templates
-|       `-- email.j2
+|-- requirements.txt
+|-- app.py
+|-- templates
+|   `-- email.j2
 |-- habitat
 |   |-- default.toml
-|   |-- hooks
-|   |   `-- run
 |   `-- plan.sh
 ```
