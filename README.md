@@ -1,20 +1,20 @@
-# flask_rigging
-This package provides a set of override Plan callbacks that can be used to
-simplify the process of packaging a conventional Flask app as a Habitat Service
-Package. For more about Flask, see http://flask.pocoo.org.
+# scaffolding-flask
+This package provides a set of override Plan callbacks that simplify the process
+of packaging a conventional Flask app as a Habitat Service Package. For more
+on Flask, see http://flask.pocoo.org. The rest of this `README` details how to 
+depend on this Scaffolding package in your `plan.sh`.
 
 ## Maintainers
 * smartB Engineering: <dev@smartb.eu>
 * Blake Irvin: <blakeirvin@me.com>
 
 ## Type of Package
-Rigging (Plan templating) package
+Scaffolding
 
 ## Usage
 Here's how a plan depending on `smartb/scaffolding-flask` might look:
 ```
-# You must set the following 4 package variables to generate metadata for your
-# package:
+# Always at least set 'pkg_origin', 'pkg_name' and 'pkg_version':
 pkg_origin=<origin>
 pkg_name=<name>
 pkg_version="<version>"
