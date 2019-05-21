@@ -43,7 +43,7 @@ for your Flask project, where `app.py` is the expected entrypoint for Flask:
 |-- app.py
 |-- templates
 |   `-- email.j2
-|-- habitat
-|   |-- default.toml
-|   `-- plan.sh
+`-- habitat
+    |-- default.toml
+    `-- plan.sh
 ```
