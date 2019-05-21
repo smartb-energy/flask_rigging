@@ -1,2 +1,5 @@
 results/*
 .pkg.vars
+ecm/*
+.pip_cache/*
+.bash_history

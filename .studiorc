@@ -1,0 +1,3 @@
+#!/bin/bash
+export HISTFILE="/src/.bash_history"
+export HAB_CREATE_ARTIFACT="false"
