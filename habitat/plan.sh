@@ -9,7 +9,6 @@ pkg_deps=(
   "core/bash"
   "core/cacerts"
   "core/curl/7.63.0"
-  "core/python36"
 )
 
 do_build() {
