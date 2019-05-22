@@ -6,22 +6,31 @@ scaffolding_load() {
 
 
 _add_vendored_deps() {
+  # Here we look at the array of 'vendored' Python modules we have declared in
+  # our inheriting Plan, checking for any version constraints for that module
+  # our 'requirements.txt' and then using the version constraints to calculate
+  # a package identifier like 'origin/package/1.2.3'. We then bypass broken
+  # 'hab pkg search' behavior by doing a 'hab pkg install' with an invalid
+  # 'channel' so that we can parse the error output to look for valid package
+  # identifiers in Builder.
   for package in ${scaffolding_vendored_python_modules[*]}
   do
+    local package_origin="$(echo $package | cut -d/ -f1)"
     local package_name="$(echo $package | cut -d/ -f2)"
-    for module in $(grep $package_name $PLAN_CONTEXT/../requirements.txt | grep -v '^#' | cut -d' ' -f1 | sed 's@==@/@')
+    for habitized_module in $(grep $package_name $PLAN_CONTEXT/../requirements.txt | grep -v '^#' | cut -d' ' -f1 | sed 's@==@/@')
     do
-      build_line "Checking if there is a $pkg_origin/$module that will satisfy 'requirements.txt'"
-      if [ $(hab pkg install $pkg_origin/$module --channel="$(date +%s)" 2>&1 | grep -c "The following releases were found") -eq 1 ]
+      attach
+      build_line "Checking if there is a $package_origin/$habitized_module that will satisfy 'requirements.txt'"
+      if [ $(hab pkg install $package_origin/$habitized_module --channel="$(date +%s)" 2>&1 | grep -c "The following releases were found") -eq 1 ]
       then
-        build_line "Adding vendored version of $pkg_origin/$module to package dependencies"
-        pkg_deps+=($(echo $pkg_origin/$module))
+        build_line "Adding vendored version of $package_origin/$habitized_module to package dependencies"
+        pkg_deps+=($(echo $package_origin/$habitized_module))
       # This second conditional is needed in case we have a locally-installed copy
-      # of the vendored module already:
-      elif hab pkg path $pkg_origin/$module &> "/dev/null"
+      # of the vendored habitized_module already:
+      elif hab pkg path $package_origin/$habitized_module &> "/dev/null"
       then
-        build_line "Adding vendored version of $pkg_origin/$module to package dependencies"
-        pkg_deps+=($(echo $pkg_origin/$module))
+        build_line "Adding vendored version of $package_origin/$habitized_module to package dependencies"
+        pkg_deps+=($(echo $package_origin/$habitized_module))
       fi
     done
   done
