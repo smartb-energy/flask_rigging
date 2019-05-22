@@ -8,7 +8,8 @@ scaffolding_load() {
 _add_vendored_deps() {
   for package in ${scaffolding_vendored_python_modules[*]}
   do
-    for module in $(grep $package $PLAN_CONTEXT/../requirements.txt | grep -v '^#' | cut -d' ' -f1 | sed 's@==@/@')
+    local package_name="$(echo $package | cut -d/ -f2)"
+    for module in $(grep $package_name $PLAN_CONTEXT/../requirements.txt | grep -v '^#' | cut -d' ' -f1 | sed 's@==@/@')
     do
       build_line "Checking for a $pkg_origin/$module that will satisfy our 'requirements.txt'"
       if [ $(hab pkg install $pkg_origin/$module --channel="$(date +%s)" 2>&1 | grep -c "The following releases were found") -eq 1 ]

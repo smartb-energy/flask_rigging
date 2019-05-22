@@ -30,8 +30,8 @@ scaffolding_python_pkg="core/python36"
 # Populate this array with the names of any Pip modules you want to try to fetch
 # from your Builder origin as 'vendored' modules:
 scaffolding_vendored_python_modules=(
-  "Cython"
-  "numpy"
+  "smartb/Cython"
+  "smartb/numpy"
 )
 ```
 
