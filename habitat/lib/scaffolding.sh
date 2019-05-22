@@ -11,7 +11,7 @@ _add_vendored_deps() {
     local package_name="$(echo $package | cut -d/ -f2)"
     for module in $(grep $package_name $PLAN_CONTEXT/../requirements.txt | grep -v '^#' | cut -d' ' -f1 | sed 's@==@/@')
     do
-      build_line "Checking for a $pkg_origin/$module that will satisfy our 'requirements.txt'"
+      build_line "Checking if there is a $pkg_origin/$module that will satisfy 'requirements.txt'"
       if [ $(hab pkg install $pkg_origin/$module --channel="$(date +%s)" 2>&1 | grep -c "The following releases were found") -eq 1 ]
       then
         build_line "Adding vendored version of $pkg_origin/$module to package dependencies"
