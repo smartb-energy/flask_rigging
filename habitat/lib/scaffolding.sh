@@ -19,7 +19,6 @@ _add_vendored_deps() {
     local package_name="$(echo $package | cut -d/ -f2)"
     for habitized_module in $(grep $package_name $PLAN_CONTEXT/../requirements.txt | grep -v '^#' | cut -d' ' -f1 | sed 's@==@/@')
     do
-      attach
       build_line "Checking if there is a $package_origin/$habitized_module that will satisfy 'requirements.txt'"
       if [ $(hab pkg install $package_origin/$habitized_module --channel="$(date +%s)" 2>&1 | grep -c "The following releases were found") -eq 1 ]
       then
